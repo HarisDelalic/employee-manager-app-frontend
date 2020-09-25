@@ -9,8 +9,8 @@ export class User {
     public joinDate: Date;
     public profileImageUrl: string;
     public active: boolean;
-    public notLocked: boolean;
-    public role: [];
+    public locked: boolean;
+    public roles: [];
     public authorities: [];
   
     constructor() {
@@ -24,8 +24,8 @@ export class User {
       this.joinDate = null;
       this.profileImageUrl = '';
       this.active = false;
-      this.notLocked = false;
-      this.role = [];
+      this.locked = false;
+      this.roles = [];
       this.authorities = [];
     }
   
