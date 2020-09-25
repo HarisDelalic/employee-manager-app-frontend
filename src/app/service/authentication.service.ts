@@ -3,7 +3,6 @@ import { HttpClient, HttpResponse, HttpErrorResponse } from '@angular/common/htt
 import { environment } from '../../environments/environment'
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
 
 import { User } from '../model/user'
 
