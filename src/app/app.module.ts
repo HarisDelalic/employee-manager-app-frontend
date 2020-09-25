@@ -1,8 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule }   from '@angular/forms';
+import { AppRoutingModule } from './app-routing.module';
+
 import { NotificationModule } from './notification/notification.module';
 
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { UserService } from './service/user.service';
 import { AuthenticationService } from './service/authentication.service';
@@ -26,6 +28,7 @@ import { UsersComponent } from './components/users/users.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    FormsModule,
     NotificationModule
   ],
   providers: [AuthenticationGuard, UserService, AuthenticationService, 

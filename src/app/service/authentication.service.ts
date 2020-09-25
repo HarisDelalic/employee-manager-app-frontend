@@ -17,9 +17,8 @@ export class AuthenticationService {
 
   constructor(private http: HttpClient) { }
 
-  public login(user: User) : Observable<HttpResponse<any> | HttpErrorResponse>  {
-    return this.http.post<HttpResponse<any> | HttpErrorResponse>
-    (`${this.host}/users/login`, user, {observe: 'response'});
+  public login(user: User) : Observable<HttpResponse<User>>  {
+    return this.http.post<User>(`${this.host}/users/login`, user, {observe: 'response'});
   }
 
   public registration(user: User) : Observable<HttpResponse<any> | HttpErrorResponse> {
@@ -35,7 +34,7 @@ export class AuthenticationService {
     localStorage.removeItem('users');
   }
 
-  private saveToken(token: string) : void {
+  public saveTokenToLocalStorage(token: string) : void {
     this.token = token;
     localStorage.setItem('token', token);
   }
@@ -48,7 +47,7 @@ export class AuthenticationService {
     this.token = localStorage.getItem('token');
   }
 
-  private addUserToLocalCache(user: User) : void {
+  public saveUserToLocalStorage(user: User) : void {
     localStorage.setItem('user', JSON.stringify(user));
   }
 
