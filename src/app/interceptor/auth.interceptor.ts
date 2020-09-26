@@ -11,7 +11,7 @@ export class AuthInterceptor implements HttpInterceptor {
     .HttpEvent<any>> {
         if (
             !req.url.includes(`${this.authenticationService.host}/users/login`) &&
-            !req.url.includes(`${this.authenticationService.host}/users/register`) &&
+            !req.url.includes(`${this.authenticationService.host}/users/registration`) &&
             !req.url.includes(`${this.authenticationService.host}/users/resetpassword`)) {
                 const authRequest = req
                     .clone({ setHeaders: { Authorization: 'Bearer ' + this.authenticationService.getToken() } });
