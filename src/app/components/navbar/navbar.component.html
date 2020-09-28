@@ -1,0 +1,20 @@
+<!-- nav bar -->
+<nav class="navbar navbar-expand-md breadcrumb">
+  <div class="collapse navbar-collapse" id="navbarCollapse">
+    <div class="nav nav-pills">
+      <a class="nav-item nav-link active ml-1" (click)="changeTitle('Users')" data-toggle="tab">
+        <i class="fa fa-users"></i>
+        Users
+      </a>
+      <!-- TODO: isAdmin -->
+      <a [hidden]="!isAdmin()" class="nav-item nav-link ml-3" (click)="changeTitle('Settings')" data-toggle="tab">
+        <i class="fa fa-cogs"></i>
+        Settings
+      </a>
+      <a class="nav-item nav-link move-right mr-3" (click)="changeTitle('Profile')" data-toggle="tab">
+        Welcome, {{user?.firstName}}
+        <i class="fa fa-user"></i>
+      </a>
+    </div>
+  </div>
+</nav>

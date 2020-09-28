@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment'
 
 import { User } from '../model/user';
+import { NgForm } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -13,18 +14,21 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  public findAll() : Observable<HttpResponse<any> | HttpErrorResponse> {
-    return this.http.get<HttpResponse<any> | HttpErrorResponse>
-    (`${this.host}/users`)
+  public findAll() : Observable<User[]> {
+    return this.http.get<User[]>(`${this.host}/users/all`)
+  }
+
+  public findByUsernameOrEmailOrLastNameOrFirstName(searchTerm: string) : Observable<User[]> {
+    return this.http.get<User[]>(`${this.host}/users/find`, { params: {searchTerm}})
   }
 
   public findById(id: number) : Observable<HttpResponse<any> | HttpErrorResponse> {
     return this.http.get<HttpResponse<any> | HttpErrorResponse>
-    (`${this.host}/users${id}`)
+    (`${this.host}/users/${id}`)
   }
 
-  public addUser(formData : FormData) : Observable<HttpResponse<any> | HttpErrorResponse> {
-    return this.http.post<HttpResponse<any> | HttpErrorResponse>
+  public addUser(formData : FormData) : Observable<User> {
+    return this.http.post<User>
     (`${this.host}/users/add`, formData)
   }
 
@@ -68,9 +72,26 @@ export class UserService {
 
   public createUserFormData(loggedInUsername: string, user: User, profileImage: File): FormData {
     const formData = new FormData();
-    formData.append('username', loggedInUsername);
+    if (loggedInUsername) {
+      formData.append('username', loggedInUsername);
+    }
+
     formData.append('user', JSON.stringify(user));
     formData.append('profileImage', profileImage);
     return formData;
+  }
+
+  public createNewUser(userForm: NgForm) : User {
+    const formValue : any = userForm.form.value;
+    
+    const user : User = new User();
+    user.firstName = formValue.username;
+    user.username = formValue.username;
+    user.lastName = formValue.lastName;
+    user.email = formValue.email;
+    user.active = formValue.active ? JSON.parse(formValue.active) : false;
+    user.locked = formValue.locked ? JSON.parse(formValue.locked) : false;
+    user.roles = formValue.role.split();
+    return user;
   }
 }

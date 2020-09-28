@@ -13,16 +13,24 @@ import { AuthInterceptor } from './interceptor/auth.interceptor';
 import { AuthenticationGuard } from './guard/authentication.guard';
 import { LoginComponent } from './components/login/login.component';
 import { RegistrationComponent } from './components/registration/registration.component';
-import { UserComponent } from './components/user/user.component';
 import { UsersComponent } from './components/users/users.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { UserShowComponent } from './components/user-show/user-show.component';
+import { TitleComponent } from './components/title/title.component';
+import { UserNewComponent } from './components/user-new/user-new.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegistrationComponent,
-    UserComponent,
-    UsersComponent
+    UsersComponent,
+    NavbarComponent,
+    ResetPasswordComponent,
+    UserShowComponent,
+    TitleComponent,
+    UserNewComponent
   ],
   imports: [
     BrowserModule,

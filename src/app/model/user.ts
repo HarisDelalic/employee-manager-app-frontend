@@ -1,3 +1,5 @@
+import { Role } from './role';
+
 export class User {
     public userId: string;
     public firstName: string;
@@ -10,8 +12,7 @@ export class User {
     public profileImageUrl: string;
     public active: boolean;
     public locked: boolean;
-    public roles: [];
-    public authorities: [];
+    public roles: Role[];
   
     constructor() {
       this.userId = '';
@@ -26,7 +27,6 @@ export class User {
       this.active = false;
       this.locked = false;
       this.roles = [];
-      this.authorities = [];
     }
   
   }
