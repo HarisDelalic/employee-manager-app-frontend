@@ -15,6 +15,8 @@ import { AuthenticationService } from 'src/app/service/authentication.service';
 })
 export class UsersComponent implements OnInit, OnDestroy {
   userSelectedEvent: Subject<User> = new Subject<User>();
+  userEditedEvent: Subject<User> = new Subject<User>();
+  userDeletedEvent: Subject<String> = new Subject<String>();
 
   showLoading: boolean = false;
   public title: string = '';
@@ -66,6 +68,15 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   public onSelectUser(user: User): void {
     this.userSelectedEvent.next(user);
+  }
+
+  public onEditUser(user: User) : void {
+    this.userEditedEvent.next(user);
+  }
+
+  public onDeleteUser(username: string) : void {
+    console.log('clicked delete')
+    this.userDeletedEvent.next(username);
   }
 
   ngOnDestroy() {

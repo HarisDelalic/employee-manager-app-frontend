@@ -32,8 +32,8 @@ export class UserService {
     (`${this.host}/users/add`, formData)
   }
 
-  public update(formData : FormData) : Observable<HttpResponse<any> | HttpErrorResponse> {
-    return this.http.put<HttpResponse<any> | HttpErrorResponse>
+  public update(formData : FormData) : Observable<HttpResponse<User> | HttpErrorResponse> {
+    return this.http.put<HttpResponse<User> | HttpErrorResponse>
     (`${this.host}/users/update`, formData)
   }
 
@@ -50,9 +50,9 @@ export class UserService {
     });
   }
 
-  public delete(id: number) : Observable<any | HttpErrorResponse> {
-    return this.http.delete<any | HttpErrorResponse>
-    (`${this.host}/users/delete/${id}`)
+  public delete(username: String) : Observable<void | HttpErrorResponse> {
+    return this.http.delete<void>
+    (`${this.host}/users/delete/${username}`)
   }
 
   public getProfileImage(username: string, filename: string) : Observable<HttpResponse<any> | HttpErrorResponse> {
@@ -81,17 +81,18 @@ export class UserService {
     return formData;
   }
 
-  public createNewUser(userForm: NgForm) : User {
+  public createOrUpdateUser(userForm: NgForm) : User {
     const formValue : any = userForm.form.value;
     
     const user : User = new User();
-    user.firstName = formValue.username;
+    user.firstName = formValue.firstName;
     user.username = formValue.username;
     user.lastName = formValue.lastName;
     user.email = formValue.email;
     user.active = formValue.active ? JSON.parse(formValue.active) : false;
     user.locked = formValue.locked ? JSON.parse(formValue.locked) : false;
     user.roles = formValue.role.split();
+    console.log(user)
     return user;
   }
 }

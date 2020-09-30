@@ -1,4 +1,11 @@
 <div class="container">
+  <button [hidden] = "true" type="button" id="openUserInfo" data-toggle="modal" data-target="#viewUserModal">
+  </button>
+  <button [hidden] = "true" type="button" id="openUserEdit" data-toggle="modal" data-target="#editUserModal">
+  </button>
+  <button [hidden] = "true" type="button" id="openUserDelete" data-toggle="modal" data-target="#deleteUserModal">
+  </button>
+
   <app-title></app-title>
 
   <app-navbar></app-navbar>
@@ -13,8 +20,6 @@
             <input name="searchTerm" #searchInput="ngModel" class="form-control mr-sm-2" ngModel
               (ngModelChange)="searchUsers(searchInput.value)" type="search" placeholder="Search users...">
           </form>
-          asd
-          {{ isAdmin() ? 'jeste' : 'nije' }}
           <button [hidden]="!isAdmin()" type="button" class="btn btn-info" data-toggle="modal"
             data-target="#addUserModal"> 
             <i class="fa fa-plus"></i>New User
@@ -59,7 +64,7 @@
             <td class="">
               <div class="btn-group">
                 <button class="btn btn-outline-info" (click)="onEditUser(appUser)"><i class="fas fa-edit"></i></button>
-                <button [hidden]="!isAdmin" class="btn btn-outline-danger" (click)="onDeleteUder(appUser?.username)"><i
+                <button [hidden]="!isAdmin" class="btn btn-outline-danger" (click)="onDeleteUser(appUser?.username)"><i
                     class="fas fa-trash"></i></button>
               </div>
             </td>
@@ -75,10 +80,14 @@
 
     <app-user-show [userSelectedEvent]="userSelectedEvent.asObservable()"></app-user-show>
 
-    <!-- model new user -->
+    <!-- modal new user -->
     <app-user-new></app-user-new>
 
     <!-- modal edit user -->
+    <app-user-edit [userEditedEvent]="userEditedEvent.asObservable()"></app-user-edit>
+
+    <!-- modale delete user -->
+    <!-- <app-user-delete [userDeletedEvent]="userDeletedEvent.asObservable()"></app-user-delete>  -->
 
     <!-- profile image change form -->
 

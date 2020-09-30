@@ -9,7 +9,7 @@ import { TitleService } from 'src/app/title.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  user: User;
+  loggedInUser: User;
 
   constructor( 
     private authenticationService : AuthenticationService,
@@ -20,7 +20,7 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.user = this.authenticationService.getUserFromLocalStorage();
+    this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
   }
 
   public isAdmin() {

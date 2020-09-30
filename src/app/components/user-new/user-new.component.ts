@@ -42,13 +42,14 @@ export class UserNewComponent implements OnInit, OnDestroy {
   }
 
   public onAddNewUser(newUserForm: NgForm) {
-    const newUser : User = this.userService.createNewUser(newUserForm);
+    const newUser : User = this.userService.createOrUpdateUser(newUserForm);
     const formData : FormData = this.userService.createUserFormData(null, newUser, this.profileImage);
     this.subscriptions.push(
       this.userService.addUser(formData).subscribe(
           (response: User) => {
             this.notificationService.notify(NotificationType.SUCCESS, 
               "Congratulations, you have added new user " + response.username)
+              
               document.getElementById('new-user-close').click()
           }, (errorResponse: HttpErrorResponse) => {
             this.notificationService.notify(NotificationType.ERROR, 

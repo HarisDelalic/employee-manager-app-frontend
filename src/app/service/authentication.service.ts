@@ -72,14 +72,17 @@ export class AuthenticationService {
     }
   }
 
-  public getRoleNames() : string[] {
+  public getRoleNames(): string[] {
     const user: User = this.getUserFromLocalStorage();
     return user ? user.roles.map(role => role.name) : [];
   }
 
   public isAdmin(): boolean {
-    return this.getRoleNames().filter(roleName =>
+    const isAdmin: boolean = this.getRoleNames().filter(roleName =>
       ((RoleName.ROLE_ADMIN) === roleName
         || RoleName.ROLE_SUPERUSER === roleName)).length > 0
+
+    console.log(isAdmin)
+    return isAdmin;
   }
 }

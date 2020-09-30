@@ -19,6 +19,9 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { UserShowComponent } from './components/user-show/user-show.component';
 import { TitleComponent } from './components/title/title.component';
 import { UserNewComponent } from './components/user-new/user-new.component';
+import { UserEditComponent } from './components/user-edit/user-edit.component';
+import { UserDeleteComponent } from './components/user-delete/user-delete.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +33,10 @@ import { UserNewComponent } from './components/user-new/user-new.component';
     ResetPasswordComponent,
     UserShowComponent,
     TitleComponent,
-    UserNewComponent
+    UserNewComponent,
+    UserEditComponent,
+    UserDeleteComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,
