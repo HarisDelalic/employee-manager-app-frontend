@@ -75,7 +75,6 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   public onDeleteUser(username: string) : void {
-    console.log('clicked delete')
     this.userDeletedEvent.next(username);
   }
 

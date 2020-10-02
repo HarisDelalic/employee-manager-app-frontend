@@ -1,84 +1,82 @@
- <!-- model add user -->
- <div [hidden]="!isAdmin()" class="modal draggable fade bd-example-modal-lg" id="editUserModal" tabindex="-1" role="dialog"
- aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
- <div class="modal-dialog" role="document">
-   <div class="modal-content">
-     <div class="modal-header">
-       <h5 class="modal-title text-center">Edit User {{selectedUser?.firstName}}
-        {{selectedUser?.lastName}}</h5>
-       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-         <span aria-hidden="true">&times;</span>
-       </button>
-     </div>
-     <div class="modal-body">
-       <div>
-         <form #editUserForm="ngForm" (ngSubmit)="onEditUser(editUserForm)">
-           <div class="form-group">
-             <label for="firstName">First Name</label>
-             <input type="text" name="firstName" required [ngModel]="selectedUser.firstName" class="form-control">
-           </div>
-           <div class="form-group">
-             <label for="lastName">Last Name</label>
-             <input type="text" name="lastName" required [(ngModel)]="selectedUser.lastName" class="form-control">
-           </div>
-           <div class="form-group">
-             <label for="username">Username</label>
-             <input type="text" name="username" required [(ngModel)]="selectedUser.username" class="form-control">
-           </div>
-           <div class="form-group">
-             <label for="email">Email</label>
-             <input type="email" name="email" required [(ngModel)]="selectedUser.email" class="form-control">
-           </div>
-           <!-- TODO: This has to be checkboxes -->
-           <div *ngIf="isAdmin" class="form-group">
-             <label for="authority">Role</label>
-             <select name="role" required [(ngModel)]="selectedUser.roles" class="form-control">
-               <option value="ROLE_USER">USER</option>
-               <option value="ROLE_HR">HR</option>
-               <option value="ROLE_MANAGER">MANAGER</option>
-               <option value="ROLE_ADMIN">ADMIN</option>
-               <option value="ROLE_SUPERUSER">SUPER ADMIN</option>
-             </select>
-           </div>
-           <div *ngIf="!isAdmin" class="form-group">
-             <label for="authority">Role</label>
-             <input type="text" name="role" required [(ngModel)]="selectedUser.roles" readonly class="form-control">
-           </div>
-           <div class="input-group mb-2">
-             <div class="input-group-prepend">
-               <span class="input-group-text">Profile Picture </span>
-             </div>
-             <div class="custom-file">
-               <input type="file" accept="image/*" name="profileImage"
-               (change)="onProfileImageChange($event.target.files)"
-                 class="custom-file-input">
-               <label class="custom-file-label"><span [hidden]="!profileImageName">{{ profileImageName }}</span>
-                 <span [hidden]="profileImageName">Choose File</span>
-               </label>
-             </div>
-           </div>
-           <fieldset class="form-group">
-             <div class="form-check">
-               <label class="form-check-label">
-                 <input type="checkbox" name="active" [(ngModel)]="selectedUser.active" class="form-check-input" >
-                 Acitve
-               </label>
-             </div>
-             <div class="form-check disabled">
-               <label class="form-check-label">
-                 <input type="checkbox" name="locked" [(ngModel)]="selectedUser.locked" class="form-check-input">
-                 Locked
-               </label>
-             </div>
-           </fieldset>
-           <button type="submit" style="display: none;" id="edit-user-save"></button>
-         </form>
-       </div>
-     </div>
-     <div class="modal-footer">
-       <button type="button" class="btn btn-secondary" data-dismiss="modal" id="edit-user-close">Close</button>
-       <button type="button" (click)="editUser()" [disabled]="editUserForm.invalid" class="btn btn-primary">Save changes</button>
-     </div>
-   </div>
- </div>
+<!-- model add user -->
+<div [hidden]="!isAdmin()" class="modal draggable fade bd-example-modal-lg" id="editUserModal" tabindex="-1"
+  role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center">Edit User {{selectedUser?.firstName}}
+          {{selectedUser?.lastName}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <form #editUserForm="ngForm" (ngSubmit)="onEditUser(editUserForm)">
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" name="firstName" required [ngModel]="selectedUser.firstName" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" name="lastName" required [(ngModel)]="selectedUser.lastName" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" name="username" required [(ngModel)]="selectedUser.username" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" name="email" required [(ngModel)]="selectedUser.email" class="form-control">
+            </div>
+            <!-- TODO: This has to be checkboxes -->
+            <div *ngIf="isAdmin" class="form-group">
+              <label for="authority">Role</label>
+              <div *ngFor="let role of userRoles">
+                <input type="checkbox" name="{{ role.name }}" [value]="role.name" (change)="setRole($event, role)"
+                  [(ngModel)]="role.isChecked">
+                  {{ role.name }}
+              </div>
+            </div>
+            <div *ngIf="!isAdmin" class="form-group">
+              <label for="authority">Role</label>
+              <input type="text" name="role" required [(ngModel)]="selectedUser.roles" readonly class="form-control">
+            </div>
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Profile Picture </span>
+              </div>
+              <div class="custom-file">
+                <input type="file" accept="image/*" name="profileImage"
+                  (change)="onProfileImageChange($event.target.files)" class="custom-file-input">
+                <label class="custom-file-label"><span [hidden]="!profileImageName">{{ profileImageName }}</span>
+                  <span [hidden]="profileImageName">Choose File</span>
+                </label>
+              </div>
+            </div>
+            <fieldset class="form-group">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input type="checkbox" name="active" [(ngModel)]="selectedUser.active" class="form-check-input">
+                  Acitve
+                </label>
+              </div>
+              <div class="form-check disabled">
+                <label class="form-check-label">
+                  <input type="checkbox" name="locked" [(ngModel)]="selectedUser.locked" class="form-check-input">
+                  Locked
+                </label>
+              </div>
+            </fieldset>
+            <button type="submit" style="display: none;" id="edit-user-save"></button>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="edit-user-close">Close</button>
+        <button type="button" (click)="editUser()" [disabled]="editUserForm.invalid" class="btn btn-primary">Save
+          changes</button>
+      </div>
+    </div>
+  </div>
 </div>

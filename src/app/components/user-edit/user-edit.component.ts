@@ -7,6 +7,8 @@ import { NotificationService } from 'src/app/service/notification.service';
 import { NotificationType } from 'src/app/model/enum/notification-type.enum';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NgForm } from '@angular/forms';
+import { RoleName } from 'src/app/model/enum/role-name.enum';
+import { Authority } from 'src/app/model/authority';
 
 @Component({
   selector: 'app-user-edit',
@@ -18,6 +20,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
   private subscriptions : Subscription[] = [];
   public selectedUser = new User;
   public selectedUserUsername : string;
+  public allRoles: RoleName[];
+  public userRoles: any[];
 
   @Input() userEditedEvent: Observable<User>;
   profileImageName: string;
@@ -30,12 +34,13 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.eventsSubscription = this.userEditedEvent.subscribe((user) => {
-      console.log('in open user edit')
       this.selectedUser = user;
       this.selectedUserUsername = user.username;
+      this.allRoles = this.userService.getAllRoles();
+      this.setUserRoles();
       document.getElementById('openUserEdit').click();
     })
-    // this.subscriptions.push(this.eventsSubscription);
+    this.subscriptions.push(this.eventsSubscription);
   }
 
   public isAdmin() {
@@ -51,19 +56,37 @@ export class UserEditComponent implements OnInit, OnDestroy {
     document.getElementById('edit-user-save').click()
   }
 
+  public setRole(event : any,role: any) {
+    if (event.target.checked) {
+      this.userRoles.forEach(userRole => {
+        if (role.name == userRole.name) {
+          userRole.isChecked = true;
+        }
+      })
+    } else {
+      this.userRoles.forEach(userRole => {
+        if (role.name == userRole.name) {
+          userRole.isChecked = false;
+        }
+      })
+    }
+  }
+
   onEditUser(editUserForm: NgForm) {
-    console.log(editUserForm)
-    // TODO: this has to be changed,
-    // since we are using only one role in frontend (using select), 
-    // and in backend we it is required to be set of roles (user should have multiple roles),
-    // we are not using [(ngModel)] on form fileds
-    const updatedUser : User = this.userService.createOrUpdateUser(editUserForm);
+    this.selectedUser.roles = [];
+    this.userRoles.forEach(userRole => {
+      if (userRole.isChecked) {
+        this.selectedUser.roles.push({name: userRole.name, authorities: []})
+      }
+    })
+ 
+    const updatedUser : User = this.userService.createOrUpdateUser(editUserForm, this.selectedUser.roles);
     const formData : FormData = this.userService.createUserFormData(this.selectedUserUsername, updatedUser, this.profileImage);
     
     this.subscriptions.push(
       this.userService.update(formData).subscribe(
-       (response : any) => {
-         console.log('respoinse')
+       (response : User) => {
+         this.setUserRoles()
          this.notificationService.notify(NotificationType.SUCCESS, 'User updated successfully')
          document.getElementById('edit-user-close').click()
        },
@@ -75,7 +98,18 @@ export class UserEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.eventsSubscription.unsubscribe()
+    this.subscriptions.forEach(sub => sub.unsubscribe())
+  }
+
+  private setUserRoles() {
+    this.userRoles = [];
+    this.allRoles.forEach(roleName => {
+      if (this.selectedUser.roles.map(role => role.name).includes(roleName)) {
+        this.userRoles.push({name: roleName, isChecked: true})
+      } else {
+        this.userRoles.push({name: roleName, isChecked: false})
+      }
+    }); 
   }
 
 }

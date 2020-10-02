@@ -31,13 +31,11 @@
            <!-- TODO: This has to be checkboxes -->
            <div *ngIf="isAdmin" class="form-group">
              <label for="authority">Role</label>
-             <select name="role" required ngModel="ROLE_USER" class="form-control">
-               <option value="ROLE_USER">USER</option>
-               <option value="ROLE_HR">HR</option>
-               <option value="ROLE_MANAGER">MANAGER</option>
-               <option value="ROLE_ADMIN">ADMIN</option>
-               <option value="ROLE_SUPERUSER">SUPER ADMIN</option>
-             </select>
+             <div *ngFor="let role of userRoles">
+              <input type="checkbox" name="{{ role.name }}" [value]="role.name" (change)="setRole($event, role)"
+                [(ngModel)]="role.isChecked">
+                {{ role.name }}
+            </div>
            </div>
            <div *ngIf="!isAdmin" class="form-group">
              <label for="authority">Role</label>
