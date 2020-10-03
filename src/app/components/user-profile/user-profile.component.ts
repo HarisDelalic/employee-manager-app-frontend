@@ -9,7 +9,9 @@ import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NotificationService } from 'src/app/service/notification.service';
 import { NotificationType } from 'src/app/model/enum/notification-type.enum';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse, HttpEvent, HttpEventType } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { FileUploadStatus } from 'src/app/model/file-upload.status';
 
 @Component({
   selector: 'app-user-profile',
@@ -24,11 +26,15 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   public userRoles: any[] = [];
   public userAuthorities: string[] = [];
   public selectedUserUsername: string;
+  profileImage: File;
+  profileImageName: string;
+  public fileUploadStatus = new FileUploadStatus();
 
   constructor(
     private authenticationService: AuthenticationService,
     private userService: UserService,
-    private notificationService : NotificationService) { }
+    private notificationService : NotificationService,
+    private router: Router) { }
 
   ngOnInit() {
     this.user = this.authenticationService.getUserFromLocalStorage();
@@ -97,22 +103,60 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     )
   }
 
- /* public onUpdateProfileImage(): void {
+  public onLogOut() : void {
+    this.authenticationService.logout()
+    this.router.navigateByUrl('/login')
+    this.notificationService.notify(NotificationType.SUCCESS, 'You have been successfully logged out')
+  }
+
+  public onProfileImageChange(fileList : FileList) : void {
+    this.profileImage = fileList[0];
+    this.profileImageName = fileList[0].name;
+  }
+
+  public updateProfileImage() : void {
+    document.getElementById('profile-image-input').click()
+  }
+
+  public onUpdateProfileImage() : void {
     const formData = new FormData();
-    formData.append('username', this.user.username);
-    formData.append('profileImage', this.profileImage);
+    formData.append('username', this.user.username)
+    formData.append('profileImage', this.profileImage)
     this.subscriptions.push(
-      this.userService.updateProfileImage(formData).subscribe(
+      this.userService.updateProfileImage(this.user.username, formData).subscribe(
         (event: HttpEvent<any>) => {
+          console.log('update successful')
           this.reportUploadProgress(event);
         },
         (errorResponse: HttpErrorResponse) => {
-          this.sendNotification(NotificationType.ERROR, errorResponse.error.message);
-          this.fileStatus.status = 'done';
+          this.notificationService.notify(NotificationType.ERROR, errorResponse.error.message);
+          // this.fileStatus.status = 'done';
         }
       )
     );
-  } */
+  }
+  private reportUploadProgress(event: HttpEvent<any>) {
+    // Ugly, but for now ok
+    switch(event.type) {
+      // when upload is in progress
+      case HttpEventType.UploadProgress:
+        this.fileUploadStatus.percentage = Math.round(100 * event.loaded / event.total);
+        this.fileUploadStatus.status = 'progress';
+        break;
+      // When upload is done
+      case HttpEventType.Response:
+        if (event.status === 200) {
+          this.user.profileImageUrl = `${event.body.profileImageUrl}?time=${new Date().getTime()}`
+          this.notificationService.notify(NotificationType.SUCCESS, 'Profile image updated successfully')
+          this.fileUploadStatus.status = 'done';
+          break;
+        } else {
+          this.notificationService.notify(NotificationType.ERROR, 'Unable to upload profile image, ... Please try again')
+          break;
+        }
+      default: 
+    }
+  }
 
 
   ngOnDestroy() {
